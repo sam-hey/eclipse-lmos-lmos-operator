@@ -26,6 +26,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.eclipse.lmos.operator.reconciler.LABEL_SELECTOR
 import org.eclipse.lmos.operator.resources.AgentResource
 import org.junit.jupiter.api.Test
 
@@ -138,6 +139,7 @@ class KubernetesResourceManagerTest {
                     ObjectMeta().apply {
                         name = "my-service"
                         namespace = "my-namespace"
+                        labels = mapOf("lmos-agent" to "true")
                     }
                 spec =
                     ServiceSpec().apply {
@@ -153,7 +155,7 @@ class KubernetesResourceManagerTest {
             }
 
         val serviceList = ServiceList().apply { items = listOf(service) }
-        every { kubernetesClient.services().inNamespace("my-namespace").list() } returns serviceList
+        every { kubernetesClient.services().inNamespace("my-namespace").withLabelSelector(LABEL_SELECTOR).list() } returns serviceList
 
         // when
         val url = underTest.getServiceUrl(deployment, "/capabilities")
@@ -205,7 +207,7 @@ class KubernetesResourceManagerTest {
             }
 
         val serviceList = ServiceList().apply { items = listOf(service) }
-        every { kubernetesClient.services().inNamespace("my-namespace").list() } returns serviceList
+        every { kubernetesClient.services().inNamespace("my-namespace").withLabelSelector(LABEL_SELECTOR).list() } returns serviceList
 
         // when-then
         assertThatThrownBy { underTest.getServiceUrl(deployment, "/capabilities") }

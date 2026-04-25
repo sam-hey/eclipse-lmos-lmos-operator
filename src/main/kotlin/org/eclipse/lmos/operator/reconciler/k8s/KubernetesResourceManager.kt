@@ -10,6 +10,7 @@ import io.fabric8.kubernetes.api.model.Service
 import io.fabric8.kubernetes.api.model.StatusDetails
 import io.fabric8.kubernetes.api.model.apps.Deployment
 import io.fabric8.kubernetes.client.KubernetesClient
+import org.eclipse.lmos.operator.reconciler.LABEL_SELECTOR
 import org.eclipse.lmos.operator.resources.AgentResource
 import org.eclipse.lmos.operator.resources.RolloutResource
 import org.slf4j.LoggerFactory
@@ -107,6 +108,7 @@ class KubernetesResourceManager(
             kubernetesClient
                 .services()
                 .inNamespace(deployment.metadata.namespace)
+                .withLabelSelector(LABEL_SELECTOR)
                 .list()
 
         val matchingServices =
@@ -138,6 +140,7 @@ class KubernetesResourceManager(
             kubernetesClient
                 .services()
                 .inNamespace(rollout.metadata.namespace)
+                .withLabelSelector(LABEL_SELECTOR)
                 .list()
 
         val matchingServices =
