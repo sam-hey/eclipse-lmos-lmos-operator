@@ -155,7 +155,13 @@ class KubernetesResourceManagerTest {
             }
 
         val serviceList = ServiceList().apply { items = listOf(service) }
-        every { kubernetesClient.services().inNamespace("my-namespace").withLabelSelector(LABEL_SELECTOR).list() } returns serviceList
+        every {
+            kubernetesClient
+                .services()
+                .inNamespace("my-namespace")
+                .withLabelSelector(LABEL_SELECTOR)
+                .list()
+        } returns serviceList
 
         // when
         val url = underTest.getServiceUrl(deployment, "/capabilities")
@@ -207,7 +213,13 @@ class KubernetesResourceManagerTest {
             }
 
         val serviceList = ServiceList().apply { items = listOf(service) }
-        every { kubernetesClient.services().inNamespace("my-namespace").withLabelSelector(LABEL_SELECTOR).list() } returns serviceList
+        every {
+            kubernetesClient
+                .services()
+                .inNamespace("my-namespace")
+                .withLabelSelector(LABEL_SELECTOR)
+                .list()
+        } returns serviceList
 
         // when-then
         assertThatThrownBy { underTest.getServiceUrl(deployment, "/capabilities") }
